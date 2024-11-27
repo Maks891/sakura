@@ -1,3 +1,5 @@
+import asyncio # Добавьте эту строку
+# ... остальной ваш код ...
 import logging
 import aiosqlite
 from aiogram import Bot, Dispatcher, types
