@@ -53,22 +53,19 @@ async def handle_message(message: types.Message):
         logging.error(f"Ошибка при сохранении сообщения в БД: {e}")
 
 
-@dp.message_handler(filters.Group, lambda message: message.reply_to_message)
+@dp.message_handler(filters.Text(), lambda message: message.chat.type == types.ChatType.GROUP and message.reply_to_message)
 async def handle_group_message(message: types.Message):
     try:
         if message.reply_to_message and message.reply_to_message.from_user.id == bot.id:
-            # Более надежное извлечение user_id
             reply_text = message.reply_to_message.text
             try:
                 user_id_str = reply_text.split(':')[0].split(' ')[-1]
-                user_id = int(user_id_str) # Преобразуем в целое число
+                user_id = int(user_id_str)
                 await bot.send_message(user_id, f"Ответ от администратора: {message.text}")
             except (IndexError, ValueError):
                 logging.error(f"Не удалось извлечь user_id из сообщения: {reply_text}")
-
     except Exception as e:
         logging.error(f"Ошибка при обработке группового сообщения: {e}")
-
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
