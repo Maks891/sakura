@@ -53,8 +53,9 @@ async def handle_message(message: types.Message):
         logging.error(f"Ошибка при сохранении сообщения в БД: {e}")
 
 
-@dp.message_handler(filters.Text(), lambda message: message.chat.type == types.ChatType.GROUP and message.reply_to_message)
+@dp.message_handler(lambda message: message.chat.type == types.ChatType.GROUP and message.reply_to_message and message.text)
 async def handle_group_message(message: types.Message):
+    # ... (ваш код обработки группового сообщения) ...
     try:
         if message.reply_to_message and message.reply_to_message.from_user.id == bot.id:
             reply_text = message.reply_to_message.text
